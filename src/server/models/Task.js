@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import  userSchema from './User.js';
-import { getPriority, type } from 'os';
 
 const taskSchema = new mongoose.Schema({
     userId:{

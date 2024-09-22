@@ -3,10 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import { columns, TaskData } from "@/components/ui/column";
+import {  TaskData } from "@/components/ui/column";
 import { AddTask } from '@/components/ui/addTask';
 import Header from '@/components/ui/header';
-import { DataTable } from '@/components/ui/dataTable';
 
 interface Board {
     id: string;

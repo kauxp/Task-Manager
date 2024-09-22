@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 import LoginIllus from "../assets/AuthSVG.svg";
-import Login from "../pages/login";
 const Auth: React.FC = () => {
   
     return (
