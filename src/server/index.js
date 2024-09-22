@@ -1,6 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config(); 
-
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -8,7 +5,8 @@ import cors from 'cors';
 import authToken from './middleware/authToken.js';
 import authRoutes from './routes/auth.js';
 import taskRoutes from './routes/task.js';
-
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
