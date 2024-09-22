@@ -63,7 +63,7 @@ export function ViewOptions() {
                 {selectedStatus.label}
               </>
             ) : (
-              <>+ Set status</>
+              <>View Options</>
             )}
           </Button>
         </PopoverTrigger>
