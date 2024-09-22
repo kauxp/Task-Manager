@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown } from "lucide-react";
 import { UpdateTaskModal } from "../UpdateTaskModal/UpdatetaskModal";
 
 export type TaskData = {
@@ -35,45 +34,45 @@ const deleteTask = (id: string) => {
     .catch((err) => console.log(err));
 };
 
+const ActionsCell = ({ row }: { row: any }) => {
+  const payment = row.original;
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleUpdateTask = () => {
+    setModalOpen(true);
+  };
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onClick={handleUpdateTask}>Update Task</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="text-red-700 hover:text-red-700" onClick={() => deleteTask(payment._id)}>
+            Delete Task
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <UpdateTaskModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        taskData={payment}
+      />
+    </>
+  );
+};
+
 export const columns: ColumnDef<TaskData>[] = [
   {
     id: "actions",
-    cell: ({ row }) => {
-      const payment = row.original;
-      const [isModalOpen, setModalOpen] = useState(false); // Local state for modal visibility
-
-      const handleUpdateTask = () => {
-        setModalOpen(true); // Open the modal
-      };
-
-      return (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={handleUpdateTask}>
-                Update Task
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-700 hover:text-red-700" onClick={() => deleteTask(payment._id)}>
-                Delete Task
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <UpdateTaskModal
-            isOpen={isModalOpen}
-            onClose={() => setModalOpen(false)}
-            taskData={payment} // Pass the task data to the modal
-          />
-        </>
-      );
-    },
+    cell: ({ row }) => <ActionsCell row={row} />, // Use the new component here
   },
   {
     accessorKey: "title",
