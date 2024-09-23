@@ -2,7 +2,7 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import { JWT_SECRET } from '../envConfig.js';
+import { JWT_SECRET } from '../envConfig';
 dotenv.config();
 
 export const register = async (req, res) => {
