@@ -30,6 +30,6 @@ mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
 app.use('/auth', authRoutes);
 app.use('/task', authToken, taskRoutes);
 
-app.listen(port, 'localhost', () => {
+app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
