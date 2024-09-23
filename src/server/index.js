@@ -19,7 +19,7 @@ if (!mongoUri) {
   console.error('MongoDB connection string is missing in .env');
 }
 
-mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoUri)
   .then(() => {
     console.log('Connected to MongoDB');
   })
