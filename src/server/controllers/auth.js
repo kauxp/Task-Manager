@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import { JWT_SECRET } from '../envConfig.js';
 dotenv.config();
 
 export const register = async (req, res) => {
@@ -33,7 +34,7 @@ export const login = async (req, res) => {
             if(!match) return res.status(400).json({message: "Invalid credentials"});
             else {
                 const payload = {id: user._id};
-                const token = jwt.sign(payload, process.JWT_SECRET, {expiresIn: '1h'});
+                const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'});
                 return res.status(200).json({message: "logged in successfully", token: token});
             }
         }
