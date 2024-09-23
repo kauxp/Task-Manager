@@ -35,7 +35,7 @@ export function AddTask() {
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/task/create", {
+      const res = await axios.post("https://task-manager-656o.onrender.com/task/create", {
         ...data,
         userId: "66eff16833445c3bef11cdfe",
         dueDate: date ? date.toISOString() : "",

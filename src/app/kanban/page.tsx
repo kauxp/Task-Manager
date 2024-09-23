@@ -27,7 +27,7 @@ const SimpleKanban: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch("http://localhost:5000/task/");
+            const res = await fetch("https://task-manager-656o.onrender.com/task/");
             const result = await res.json();
             setData(result);
 
@@ -57,7 +57,7 @@ const SimpleKanban: React.FC = () => {
 
     const updateTask = async (task: TaskData) => {
         try {
-            const res = await fetch(`http://localhost:5000/task/update/status/${task._id}`, {
+            const res = await fetch(`https://task-manager-656o.onrender.com/task/update/status/${task._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

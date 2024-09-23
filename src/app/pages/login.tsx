@@ -27,7 +27,7 @@ const Auth: React.FC = () => {
     console.log('Submitting form with data:', formData); // Added console log
 
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", {
+      const response = await axios.post("https://task-manager-656o.onrender.com/auth/login", {
         email: formData.email,
         password: formData.password
       });

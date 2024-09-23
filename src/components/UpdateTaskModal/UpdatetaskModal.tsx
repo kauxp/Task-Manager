@@ -40,7 +40,7 @@ export function UpdateTaskModal({ isOpen, onClose, taskData }: UpdateTaskModalPr
     e.preventDefault();
     try {
         console.log("data", data);
-      const response = await fetch(`http://localhost:5000/task/update/${data._id}`, {
+      const response = await fetch(`https://task-manager-656o.onrender.com/task/update/${data._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

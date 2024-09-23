@@ -23,7 +23,7 @@ const Task: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch("http://localhost:5000/task/");
+            const res = await fetch("https://task-manager-656o.onrender.com/task/");
             const result = await res.json();
             
             setData(result);

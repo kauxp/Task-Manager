@@ -24,7 +24,7 @@ export type TaskData = {
 };
 
 const deleteTask = (id: string) => {
-  fetch(`http://localhost:5000/task/delete/${id}`, {
+  fetch(`https://task-manager-656o.onrender.com/task/delete/${id}`, {
     method: "DELETE",
   })
     .then((res) => res.json())
