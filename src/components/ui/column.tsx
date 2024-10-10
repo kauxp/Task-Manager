@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
@@ -13,9 +13,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UpdateTaskModal } from "../UpdateTaskModal/UpdatetaskModal";
+import dotenv from "dotenv";
+dotenv.config();
 
 export type TaskData = {
-  _id: string;
+  userId: string;
   title: string;
   description: string;
   status: string;
@@ -24,12 +26,14 @@ export type TaskData = {
 };
 
 const deleteTask = (id: string) => {
-  fetch(`https://task-manager-656o.onrender.com/task/delete/${id}`, {
+  console.log("Deleting task with id: ", id);
+  fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/task/${id}`, {
     method: "DELETE",
   })
     .then((res) => res.json())
     .then((result) => {
       console.log(result);
+      window.location.reload();
     })
     .catch((err) => console.log(err));
 };
@@ -53,7 +57,9 @@ const ActionsCell = ({ row }: { row: any }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={handleUpdateTask}>Update Task</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleUpdateTask}>
+            Update Task
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-red-700 hover:text-red-700" onClick={() => deleteTask(payment._id)}>
             Delete Task
@@ -61,6 +67,7 @@ const ActionsCell = ({ row }: { row: any }) => {
         </DropdownMenuContent>
       </DropdownMenu>
       <UpdateTaskModal
+        id={payment._id}
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
         taskData={payment}

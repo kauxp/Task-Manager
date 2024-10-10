@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import LoginIllus from "../assets/AuthSVG.svg";
+import SignUp from "../pages/signup";
 const Auth: React.FC = () => {
   
     return (
@@ -11,8 +12,8 @@ const Auth: React.FC = () => {
         </div>
       </div>
       <div className='justify-center items-center w-1/2 bg-[#eeffb1] flex'>
-        <div className='scale-125'>
-            
+        <div className='scale-125 w-[35%]'>
+            <SignUp/>
         </div>
       </div>
     </div>

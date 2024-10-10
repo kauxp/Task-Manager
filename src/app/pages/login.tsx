@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const Auth: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -22,21 +24,20 @@ const Auth: React.FC = () => {
     });
   };
 
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log('Submitting form with data:', formData); // Added console log
 
     try {
-      const response = await axios.post("https://task-manager-656o.onrender.com/auth/login", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login` , {
         email: formData.email,
         password: formData.password
       });
 
-      console.log('Response received:', response.data); // Log the response
       
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
-        console.log('Logged in successfully');
+        console.log('Logged in successfully');      
         router.push('/task');
       } else {
         console.error('No token received');
@@ -47,6 +48,10 @@ const Auth: React.FC = () => {
       alert('Invalid credentials. Please try again.');
     }
   };
+
+  const renderRegister = () => {
+    router.push('/register');
+  }
 
   return (
     <div className=''>
@@ -75,7 +80,7 @@ const Auth: React.FC = () => {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col gap-2 ">
-          <Button className="w-full bg-transparent hover:bg-transparent text-black shadow-none">Create an account</Button>
+          <Button className="w-full bg-transparent hover:bg-transparent text-black shadow-none" onClick={renderRegister}>Create an account</Button>
         </CardFooter>
       </Card>
     </div>

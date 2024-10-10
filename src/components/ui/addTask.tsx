@@ -13,45 +13,66 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format, set } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";  
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import axios from "axios";
 import { TaskData } from "./column";
+import dotenv from 'dotenv';
+dotenv.config();
 
+interface JwtPayload {
+  id: String,
+  iat : String,
+  exp : String
+}
 export function AddTask() {
   const [date, setDate] = useState<Date>();
   const [isOpen, setIsOpen] = useState(false); // State to handle modal visibility
   const [data, setData] = useState<TaskData>({
-    _id: "",
+    userId: "",
     title: "",
     description: "",
     priority: "",
     status: "",
-    dueDate: date ? date.toISOString() : "",
+    dueDate:  "",
   });
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post("https://task-manager-656o.onrender.com/task/create", {
-        ...data,
-        userId: "66eff16833445c3bef11cdfe",
-        dueDate: date ? date.toISOString() : "",
+      // console.log("Data", data);
+      console.log("Date", date ? date.toISOString() : "");
+
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/task/`, {
+        userId: data.userId,
+        title: data.title,
+        description: data.description,
+        priority: data.priority,
+        status: data.status,
+        dueDate: date?.toISOString(),
+      }).then((res) => {
+        console.log("Task added successfully", res.data);
+      }).catch((error) => {
+        console.error("Error adding task:", error);
       });
-      console.log("Task added successfully:", res.data);
-      setIsOpen(false); // Close modal after successful submission
+      setIsOpen(false);
+      window.location.reload();
     } catch (error) {
       console.error("Error adding task:", error);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    
+    const id =document.cookie.split('=')[1];
+
     const { name, value } = e.target;
     setData((prevData) => ({
       ...prevData,
       [name]: value,
+      userId: id,
     }));
   };
 

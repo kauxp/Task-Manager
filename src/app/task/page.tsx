@@ -8,25 +8,36 @@ import { useLayoutEffect } from 'react';
 
 import {TaskData, columns} from "@/components/ui/column"
 import { DataTable } from "@/components/ui/dataTable"
+import jwt_deocde from "jwt-decode"
 
 import { AddTask } from '@/components/ui/addTask';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const Task: React.FC = () => {
-    useLayoutEffect(() => {
-        const isAuth = isAuthenticated;
-        if(!isAuth){
-          redirect("/login");
-        }
-    }, [])
+    // useLayoutEffect(() => {
+    //     const isAuth = isAuthenticated;
+    //     if(!isAuth){
+    //       redirect("/login");
+    //     }
+    // }, [])
 
     const [data, setData] = useState<TaskData[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch("https://task-manager-656o.onrender.com/task/");
+            const token = localStorage.getItem('token');
+
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/task/`,{
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`, 
+                },
+
+            });
             const result = await res.json();
-            
-            setData(result);
+            console.log(result);
+            setData(result.task);
         };
 
         fetchData();

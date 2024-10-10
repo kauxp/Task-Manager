@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,14 +20,17 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { TaskData } from "../ui/column";
+import dotenv from 'dotenv';
+dotenv.config();
 
 interface UpdateTaskModalProps {
+  id: string;
   isOpen: boolean;
   onClose: () => void;
   taskData: TaskData;
 }
 
-export function UpdateTaskModal({ isOpen, onClose, taskData }: UpdateTaskModalProps) {
+export function UpdateTaskModal({id, isOpen, onClose, taskData }: UpdateTaskModalProps) {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [data, setData] = useState<TaskData>(taskData);
 
@@ -38,29 +41,21 @@ export function UpdateTaskModal({ isOpen, onClose, taskData }: UpdateTaskModalPr
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Data", data);
+    console.log("id"  , id);
     try {
-        console.log("data", data);
-      const response = await fetch(`https://task-manager-656o.onrender.com/task/update/${data._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        
-        body: JSON.stringify({
-          ...data,
-          dueDate: date ? date.toISOString() : "",
-        }),
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/task/${id}`, {
+        userId: data.userId,
+        title: data.title,
+        description: data.description,
+        priority: data.priority,
+        status: data.status,
+        dueDate: date?.toISOString(),
       });
-
-      if (!response.ok) {
-        console.log("Task update failed:", response);
-        
-        throw new Error("Network response was not ok",);
-      }
-
-      const result = await response.json();
+      const result = response.data;
       console.log("Task updated successfully:", result);
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error updating task:", error);
     }
