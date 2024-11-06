@@ -2,9 +2,7 @@
 import Header from "@/components/ui/header"
 import React, { useState, useEffect } from 'react';
 
-import { isAuthenticated } from '@/utils/isAuthenticates';
-import { redirect } from 'next/navigation';
-import { useLayoutEffect } from 'react';
+
 
 import {TaskData, columns} from "@/components/ui/column"
 import { DataTable } from "@/components/ui/dataTable"
@@ -14,12 +12,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const Task: React.FC = () => {
-    // useLayoutEffect(() => {
-    //     const isAuth = isAuthenticated;
-    //     if(!isAuth){
-    //       redirect("/login");
-    //     }
-    // }, [])
+   
 
     const [data, setData] = useState<TaskData[]>([]);
 

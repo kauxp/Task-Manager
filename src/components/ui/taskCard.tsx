@@ -1,6 +1,5 @@
-import { Draggable } from "react-beautiful-dnd";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { TaskData, deleteTask } from "./column";
+import { deleteTask } from "./column";
 import { Dustbin } from "@/app/assets/Dustbin";
 import { Pen } from "@/app/assets/Pen"; 
 import { UpdateTaskModal } from "../UpdateTaskModal/UpdatetaskModal";

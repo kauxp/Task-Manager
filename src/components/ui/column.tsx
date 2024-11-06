@@ -1,5 +1,4 @@
 "use client";
-import axios from "axios";
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";

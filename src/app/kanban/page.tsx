@@ -35,8 +35,6 @@ let initialBoards: Board[] = [
 const SimpleKanban: React.FC = () => {
     const [data, setData] = useState<Task[]>([]);
     const [boards, setBoards] = useState(initialBoards);
-    const [taskTitle, setTaskTitle] = useState('');
-    const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
