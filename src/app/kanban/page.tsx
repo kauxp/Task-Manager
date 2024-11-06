@@ -2,16 +2,29 @@
 
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
 import {  TaskData } from "@/components/ui/column";
 import { AddTask } from '@/components/ui/addTask';
 import Header from '@/components/ui/header';
+import dotenv from 'dotenv';
+import TaskCard from '@/components/ui/taskCard';
+dotenv.config();
+
+interface Task{
+    _id: string;
+    userId: string;
+    title: string;
+    description: string;
+    status: string;
+    priority: 'High' | 'Medium' | 'Low';
+    dueDate: string;
+}
 
 interface Board {
     id: string;
     name: string;
-    items: TaskData[];
+    items: Task[];
 }
+
 
 let initialBoards: Board[] = [
     { id: 'todo', name: 'To Do', items: [] },
@@ -20,44 +33,67 @@ let initialBoards: Board[] = [
 ];
 
 const SimpleKanban: React.FC = () => {
-    const [data, setData] = useState<TaskData[]>([]);
+    const [data, setData] = useState<Task[]>([]);
     const [boards, setBoards] = useState(initialBoards);
     const [taskTitle, setTaskTitle] = useState('');
     const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch("https://task-manager-656o.onrender.com/task/");
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/task/`,{
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`, 
+                },
+
+            });
             const result = await res.json();
+            console.log(result);
             setData(result);
 
             // Initialize boards based on fetched data
-            const initialBoards = result.map((task: any) => ({
-                id: task.status,
-                name: task.status,
-                items: result.filter((item: any) => item.status === task.status),
+            const allStatuses = ["To Do", "In Progress", "Completed"]; // Define all possible statuses here
+
+            // Initialize boards with all statuses, including empty ones
+            const initialBoards = allStatuses.map((status) => ({
+                id: status,
+                name: status,
+                items: result?.task?.filter((task: any) => task.status === status),
             }));
 
-            // Remove duplicates by converting to a Set
-            const uniqueBoards = Array.from(new Set(initialBoards.map((board: { id: any; }) => board.id)))
-                .map(id => initialBoards.find((board: { id: unknown; }) => board.id === id));
+            // Filter out duplicates while keeping empty boards
+            const uniqueBoards = Array.from(new Set(initialBoards.map((board) => board.id)))
+                .map(id => initialBoards.find((board) => board.id === id))
+                .filter((board): board is Board => board !== undefined);
+
 
             // Sort boards to ensure "To Do" is always first
-            const sortedBoards = uniqueBoards.sort((a, b) => {
-                if (a.id === 'todo') return -1; // "To Do" first
-                if (b.id === 'todo') return 1;
+            const sortedBoards = uniqueBoards?.sort((a, b) => {
+                if (a?.id === 'todo') return -1; // "To Do" first
+                if (b?.id === 'todo') return 1;
                 return 0; // Keep the original order for others
             });
 
+            sortedBoards?.map((board) => ({
+                ...board,
+                items: board.items.sort((a, b) => {
+                    const priorityOrder = { 'High': 1, 'Medium': 2, 'Low': 3 };
+        
+                    return priorityOrder[a.priority] - priorityOrder[b.priority];
+                }),
+            }));
+            
+            console.log("srtBoard", sortedBoards);
             setBoards(sortedBoards);
         };
 
         fetchData();
     }, []);
 
-    const updateTask = async (task: TaskData) => {
+    const updateTask = async (task: Task) => {
         try {
-            const res = await fetch(`https://task-manager-656o.onrender.com/task/update/status/${task._id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/task/${task._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -72,7 +108,7 @@ const SimpleKanban: React.FC = () => {
 
     const onDragEnd = (result: any) => {
         if (!result.destination) return;
-
+        console.log(result);
         const { source, destination } = result;
 
         const sourceBoard = boards.find(board => board.id === source.droppableId);
@@ -90,30 +126,9 @@ const SimpleKanban: React.FC = () => {
         updateTask(updatedTask);
     };
 
-    const addTask = (boardId: string) => {
-        if (taskTitle.trim()) {
-            const newTask: TaskData = {
-                title: taskTitle,
-                _id: `task-${Date.now()}`,
-                description: '',
-                status: 'todo',
-                priority: 'low',
-                dueDate: new Date().toISOString()
-            };
-            const updatedBoards = boards.map(board => {
-                if (board.id === boardId) {
-                    return { ...board, items: [...board.items, newTask] };
-                }
-                return board;
-            });
-            setBoards(updatedBoards);
-            setTaskTitle('');
-            setSelectedBoardId(null);
-        }
-    };
-
+    
     return (
-        <div className='bg-[#1a1a1a] h-screen p-10 gap-8 flex flex-col'>
+        <div className='bg-[#1a1a1a] min-h-screen p-10 gap-8 flex flex-col overflow-y-auto'>
             <Header />
             <div>
                 <AddTask />
@@ -138,9 +153,9 @@ const SimpleKanban: React.FC = () => {
                                                             ref={provided.innerRef}
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
-                                                            className='bg-[#1a1a1a] text-white p-2 mb-2 rounded'
+                                                            className=' text-white p-2 mb-2 rounded'
                                                         >
-                                                            {item.title}
+                                                            <TaskCard item={item} />
                                                         </div>
                                                     )}
                                                 </Draggable>
@@ -149,22 +164,7 @@ const SimpleKanban: React.FC = () => {
                                         </div>
                                     )}
                                 </Droppable>
-                                {selectedBoardId === board.id &&
-                                    <div className='mt-2'>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter task title"
-                                            className="w-full p-2 border rounded bg-gray-600 text-white"
-                                            value={taskTitle}
-                                            onChange={(e) => setTaskTitle(e.target.value)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    addTask(board.id);
-                                                }
-                                            }}
-                                        />
-                                    </div>
-                                }
+                                
                             </div>
                         ))}
                     </div>

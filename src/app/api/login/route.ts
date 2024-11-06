@@ -21,8 +21,8 @@ export async function POST(req: Request){
     
     try{
         const {email, password} = await req.json();
+        console.log(email, password);
         const user = await User.findOne({email:email})
-        console.log(user)
         if(!user) return NextResponse.json({message: "User not found"})
 
     else{

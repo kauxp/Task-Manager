@@ -82,7 +82,7 @@ export function UpdateTaskModal({id, isOpen, onClose, taskData }: UpdateTaskModa
       status: value,
     }));
   };
-
+  console.log(id, isOpen, onClose, taskData)
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] bg-black">

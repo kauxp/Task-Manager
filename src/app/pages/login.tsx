@@ -27,7 +27,7 @@ const Auth: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+    console.log(formData);
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login` , {
         email: formData.email,

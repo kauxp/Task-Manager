@@ -25,7 +25,7 @@ export type TaskData = {
   dueDate: string;
 };
 
-const deleteTask = (id: string) => {
+export const deleteTask = (id: string) => {
   console.log("Deleting task with id: ", id);
   fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/task/${id}`, {
     method: "DELETE",
@@ -79,7 +79,7 @@ const ActionsCell = ({ row }: { row: any }) => {
 export const columns: ColumnDef<TaskData>[] = [
   {
     id: "actions",
-    cell: ({ row }) => <ActionsCell row={row} />, // Use the new component here
+    cell: ({ row }) => <ActionsCell row={row} />, 
   },
   {
     accessorKey: "title",
@@ -117,4 +117,5 @@ export const columns: ColumnDef<TaskData>[] = [
       </Button>
     ),
   },
+  
 ];
