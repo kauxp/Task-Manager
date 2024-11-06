@@ -8,7 +8,6 @@ import { useLayoutEffect } from 'react';
 
 import {TaskData, columns} from "@/components/ui/column"
 import { DataTable } from "@/components/ui/dataTable"
-import jwt_deocde from "jwt-decode"
 
 import { AddTask } from '@/components/ui/addTask';
 import dotenv from 'dotenv';
