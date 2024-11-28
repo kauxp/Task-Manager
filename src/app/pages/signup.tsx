@@ -33,8 +33,8 @@ const Register: React.FC = () => {
         email: formData.email,
         password: formData.password
       });
-
-
+      console.log("Response: ", response.data);
+      
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         console.log('User created successfully');
@@ -72,7 +72,7 @@ const Register: React.FC = () => {
                 <Input id="password" type="password" value={formData.password} onChange={handleChange} />
               </div>
             </div>
-            <Button type="submit" className="w-full bg-[#9fcc00] font-semibold mt-4">Log In</Button>
+            <Button type="submit" className="w-full bg-[#9fcc00] font-semibold mt-4">Sign up</Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col gap-2 ">

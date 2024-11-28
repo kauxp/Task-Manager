@@ -41,10 +41,8 @@ export function AddTask() {
   });
 
   const handleSubmit = async () => {
+    console.log("Data: ", data);
     try {
-      // console.log("Data", data);
-      console.log("Date", date ? date.toISOString() : "");
-
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/task/`, {
         userId: data.userId,
         title: data.title,
@@ -65,15 +63,21 @@ export function AddTask() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    
-    const id =document.cookie.split('=')[1];
+    const token = localStorage.getItem('token');
+    if (token) {
+      const payloadBase64 = token.split('.')[1]; // The payload is the second part
+      const payloadDecoded = atob(payloadBase64); // Decode from Base64
+      const payload = JSON.parse(payloadDecoded);
+      const { name, value } = e.target;
+      setData((prevData) => ({
+        ...prevData,
+        [name]: value,
+        userId: payload.id,
+      }));
 
-    const { name, value } = e.target;
-    setData((prevData) => ({
-      ...prevData,
-      [name]: value,
-      userId: id,
-    }));
+    } else {
+      console.error("Token is null");
+    }
   };
 
   const handlePriorityChange = (value: string) => {
